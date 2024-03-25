@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,11 +18,13 @@ public class Main {
 //        simpleForm();
 //        fullClassAddress();
 //        usingSelect();
+//        asClause();
 //        whereExample1();
 //        whereLikeExample();
 //        orderByExample();
 //        updateQuery();
-        deleteQuery();
+//        deleteQuery();
+//        insertIntoSelect();
     }
 
     // example_1
@@ -32,7 +35,7 @@ public class Main {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        String sql = "From StudentEntity";
+        String sql = "From StudentEntity"; // select * from student
         Query<StudentEntity> query = session.createQuery(sql);
         List<StudentEntity> studentList = query.list();
 
@@ -52,7 +55,7 @@ public class Main {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        String sql = "From dasturlash.uz.StudentEntity";
+        String sql = "From dasturlash.uz.StudentEntity";  // select * from student
         Query<StudentEntity> query = session.createQuery(sql);
         List<StudentEntity> studentList = query.list();
 
@@ -72,13 +75,9 @@ public class Main {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        String sql = "SELECT id, name From StudentEntity";
-        Query<StudentEntity> query = session.createQuery(sql);
+        String sql = "Select s From StudentEntity s";
+        Query query = session.createQuery(sql);
         List<StudentEntity> studentList = query.list();
-
-        for (StudentEntity student : studentList) {
-            System.out.println(student);
-        }
 
         factory.close();
         session.close();
@@ -92,12 +91,16 @@ public class Main {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        String sql = "SELECT id, name From StudentEntity";
-        Query<StudentEntity> query = session.createQuery(sql);
-        List<StudentEntity> studentList = query.list();
-
-        for (StudentEntity student : studentList) {
+        String sql = "SELECT s.id, s.name From StudentEntity as s";
+        Query query = session.createQuery(sql);
+     /*   List<StudentEntity> studentList = query.list();
+        for(StudentEntity student: studentList){
             System.out.println(student);
+        }*/
+        List<Object[]> studentList = query.list();
+
+        for (Object[] obj : studentList) {
+            System.out.println(obj[0] + " " + obj[1]);
         }
 
         factory.close();
@@ -132,7 +135,7 @@ public class Main {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        String sql = "From StudentEntity where age > 20 ";
+        String sql = "From StudentEntity where age > 20";
         Query<StudentEntity> query = session.createQuery(sql);
         List<StudentEntity> studentList = query.list();
 
